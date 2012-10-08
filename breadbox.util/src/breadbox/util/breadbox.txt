@@ -1,0 +1,56 @@
+Today:
+convert all stream handlers to new memory management and border-region version. (deployment)
+verify timeout code with marching timestamps and push to staging. (Done)
+
+dns inferencing
+debugger consuming classifier events
+
+
+
+
+For work: 
+http://openprocessing.org/sketch/50864 - world vis
+
+
+
+For Melissa:
+
+http://blog.blprnt.com/blog/blprnt/updated-quick-tutorial-processing-twitter
+http://openprocessing.org/sketch/14359 - dynamic type
+http://openprocessing.org/sketch/39230 - biomechanics
+
+http://openprocessing.org/sketch/8802 - cool shaky B&W TV effect 
+
+http://openprocessing.org/sketch/1053 - text particle system...meh
+
+http://www.openprocessing.org/sketch/34978 - colloidial text
+http://www.openprocessing.org/sketch/30711 - cool effect
+
+
+monsters - jump after words
+colloidal - 
+
+
+http://www.macxdvd.com/upgrade/mac-dvd-ripper.htm
+http://vimeo.com/28228896
+http://openprocessing.org/sketch/68368
+
+
+
+Twitter - dearbornJoel - twitterhawk2
+
+Consumer key	mMz6u9Rtz3Avh0B5ZvjPRA
+Consumer secret	kthDrMD3RwZWmBmCdqh43oGn5Z03amKvyMnrAFwhSc
+Request token URL	https://api.twitter.com/oauth/request_token
+Authorize URL	https://api.twitter.com/oauth/authorize
+Access token URL	https://api.twitter.com/oauth/access_token
+
+Use the access token string as your "oauth_token" and the access token secret as your "oauth_token_secret" to sign requests with your own Twitter account. Do not share your oauth_token_secret with anyone.
+
+Access token	851586643-01vlK06r4hqITXQfcsy7yHvSYZZqeOAi7zfswvgJ
+Access token secret	8LPzFj35VmU83Zqn750lk7X2ovNIlyeyD2Q4eoOTBJ8
+
+
+scp -i OTracker.pem StagingSingleProcess.jar.linux.gtk.x86_64.zip ec2-user@107.20.11.242:/dfs1/JOEL/
+scp -i OTracker.pem CassandraSingleProcess.jar.linux.gtk.x86_64.zip ec2-user@50.17.98.140:/dfs1/JOEL/
+

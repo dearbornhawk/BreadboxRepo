@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry exported="true" kind="lib" path="libs/geomerative/library/batikfont.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/geomerative/library/geomerative.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/libs/net.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/processing-2.0_Beta3/core.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/processing-2.0_Beta3/jogl-all.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/processing-2.0_Beta3/gluegen-rt.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/GLGraphics/library/GLGraphics.jar" sourcepath="libs/GLGraphics/src"/>
+	<classpathentry exported="true" kind="lib" path="libs/ocd/library/ocd.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/processing-2.0_Beta3/jogl-all-natives-macosx-universal.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/processing-2.0_Beta3/gluegen-rt-natives-macosx-universal.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/toxiclibs-complete-0020/toxiclibscore/library/toxiclibscore.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/toxiclibs-complete-0020/verletphysics/library/verletphysics.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
