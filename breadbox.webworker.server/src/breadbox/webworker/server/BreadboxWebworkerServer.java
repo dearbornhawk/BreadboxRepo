@@ -29,28 +29,30 @@ import twitter4j.*;
 import twitter4j.conf.ConfigurationBuilder;
 
 public class BreadboxWebworkerServer extends PApplet implements
-		BreadboxConstants, WebSocketServerTokenListener, UserStreamListener {
-
+BreadboxConstants, WebSocketServerTokenListener, UserStreamListener {
+	
 	TwitterStream twitterStream;
 	TokenServer lTS;
 	Server server;
-
+	
 	String incomingMessage = "";
 	String currentMessage = null;
-
+	
 	String words[];
-
+	
 	ArrayList<Client> clientList = new ArrayList<Client>();
 	LinkedBlockingQueue<String> messages = new LinkedBlockingQueue<String>(10);
-
+	
 	HashMap<Client, Integer> wordMap = new HashMap<Client, Integer>();
 	HashMap<Client, Integer> stepOrder = new HashMap<Client, Integer>();
-
+	
 	String consumerKey = System.getProperty("consumerKey");
 	String consumerSecret = System.getProperty("consumerSecret");
 	String accessToken = System.getProperty("accessToken");
 	String accessSecret = System.getProperty("accessSecret");
-
+	
+	String filterString = System.getProperty("filter", "Halloween");
+	
 	public void disconnectEvent(Client client) {
 		synchronized (clientList) {
 			clientList.remove(client);
@@ -59,7 +61,7 @@ public class BreadboxWebworkerServer extends PApplet implements
 		}
 		// todo - need to adjust these!
 	}
-
+	
 	public void serverEvent(Server server, Client client) {
 		synchronized (clientList) {
 			wordMap.put(client, -1);
@@ -67,68 +69,68 @@ public class BreadboxWebworkerServer extends PApplet implements
 			clientList.add(client);
 		}
 	}
-
+	
 	private void init(String args[]) {
 		// start the jWebSocket server sub system
 		JWebSocketConfig.initForConsoleApp(args);
 		JWebSocketFactory.start();
-
+		
 		// if not loaded by jWebSocket.xml config file...
 		lTS = (TokenServer) JWebSocketFactory.getServer("ts0");
 		lTS.addListener(this);
 		URL path = JWebSocketConfig.getURLFromPath("ts0");
 		// System.out.println(path);
 	}
-
+	
 	private void stopServer() {
 		JWebSocketFactory.stop();
 	}
-
+	
 	@Override
 	public void processClosed(WebSocketServerEvent event) {
 		connectorSet.remove(event.getConnector());
 	}
-
+	
 	HashSet<WebSocketConnector> connectorSet = new HashSet<WebSocketConnector>();
-
+	
 	@Override
 	public void processOpened(WebSocketServerEvent event) {
 		// TODO Auto-generated method stub
 		connectorSet.add(event.getConnector());
-
+		
 	}
-
+	
 	@Override
 	public void processPacket(WebSocketServerEvent arg0, WebSocketPacket arg1) {
 		// TODO Auto-generated method stub
 		int x = 2;
-
+		
 	}
-
+	
 	@Override
 	public void processToken(WebSocketServerTokenEvent arg0, Token arg1) {
 		// TODO Auto-generated method stub
 		int x = 2;
-
+		
 	}
-
+	
 	private void startTwitter() {
-
+		
 		ConfigurationBuilder cb = new ConfigurationBuilder();
 		cb.setOAuthConsumerKey(consumerKey);
 		cb.setOAuthConsumerSecret(consumerSecret);
 		cb.setOAuthAccessToken(accessToken);
 		cb.setOAuthAccessTokenSecret(accessSecret);
-
+		
 		twitterStream = new TwitterStreamFactory(cb.build()).getInstance();
 		twitterStream.addListener(this);
 		// user() method internally creates a thread which manipulates
 		// TwitterStream and calls these adequate listener methods continuously.
 		twitterStream.filter(new FilterQuery()
-				.track(new String[] { "Halloween" }));
+							 .track(new String[] { filterString }));
 		// twitterStream.user();
 	}
-
+	
 	@Override
 	public void onStatus(Status status) {
 		// System.out.println("onStatus @" + status.getUser().getScreenName() +
@@ -136,33 +138,33 @@ public class BreadboxWebworkerServer extends PApplet implements
 		// stuff in a queue
 		// send to the pipeline
 		messages.offer(status.getUser().getScreenName() + " - "
-				+ status.getText());
+					   + status.getText());
 	}
-
+	
 	@Override
 	public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {
 		// System.out.println("Got a status deletion notice id:" +
 		// statusDeletionNotice.getStatusId());
 	}
-
+	
 	@Override
 	public void onDeletionNotice(long directMessageId, long userId) {
 		// System.out.println("Got a direct message deletion notice id:" +
 		// directMessageId);
 	}
-
+	
 	@Override
 	public void onTrackLimitationNotice(int numberOfLimitedStatuses) {
 		// System.out.println("Got a track limitation notice:" +
 		// numberOfLimitedStatuses);
 	}
-
+	
 	@Override
 	public void onScrubGeo(long userId, long upToStatusId) {
 		// System.out.println("Got scrub_geo event userId:" + userId +
 		// " upToStatusId:" + upToStatusId);
 	}
-
+	
 	@Override
 	public void onFriendList(long[] friendIds) {
 		// System.out.print("onFriendList");
@@ -171,7 +173,7 @@ public class BreadboxWebworkerServer extends PApplet implements
 		// }
 		// System.out.println();
 	}
-
+	
 	public void onFavorite(User source, User target, Status favoritedStatus) {
 		// System.out.println("onFavorite source:@"
 		// + source.getScreenName() + " target:@"
@@ -179,7 +181,7 @@ public class BreadboxWebworkerServer extends PApplet implements
 		// + favoritedStatus.getUser().getScreenName() + " - "
 		// + favoritedStatus.getText());
 	}
-
+	
 	public void onUnfavorite(User source, User target, Status unfavoritedStatus) {
 		// System.out.println("onUnFavorite source:@"
 		// + source.getScreenName() + " target:@"
@@ -187,102 +189,102 @@ public class BreadboxWebworkerServer extends PApplet implements
 		// + unfavoritedStatus.getUser().getScreenName()
 		// + " - " + unfavoritedStatus.getText());
 	}
-
+	
 	public void onFollow(User source, User followedUser) {
 		// System.out.println("onFollow source:@"
 		// + source.getScreenName() + " target:@"
 		// + followedUser.getScreenName());
 	}
-
+	
 	public void onRetweet(User source, User target, Status retweetedStatus) {
 		// System.out.println("onRetweet @"
 		// + retweetedStatus.getUser().getScreenName() + " - "
 		// + retweetedStatus.getText());
 	}
-
+	
 	public void onDirectMessage(DirectMessage directMessage) {
 		// System.out.println("onDirectMessage text:"
 		// + directMessage.getText());
 	}
-
+	
 	public void onUserListMemberAddition(User addedMember, User listOwner,
-			UserList list) {
+										 UserList list) {
 		// System.out.println("onUserListMemberAddition added member:@"
 		// + addedMember.getScreenName()
 		// + " listOwner:@" + listOwner.getScreenName()
 		// + " list:" + list.getName());
 	}
-
+	
 	public void onUserListMemberDeletion(User deletedMember, User listOwner,
-			UserList list) {
+										 UserList list) {
 		// System.out.println("onUserListMemberDeleted deleted member:@"
 		// + deletedMember.getScreenName()
 		// + " listOwner:@" + listOwner.getScreenName()
 		// + " list:" + list.getName());
 	}
-
+	
 	public void onUserListSubscription(User subscriber, User listOwner,
-			UserList list) {
+									   UserList list) {
 		// System.out.println("onUserListSubscribed subscriber:@"
 		// + subscriber.getScreenName()
 		// + " listOwner:@" + listOwner.getScreenName()
 		// + " list:" + list.getName());
 	}
-
+	
 	public void onUserListUnsubscription(User subscriber, User listOwner,
-			UserList list) {
+										 UserList list) {
 		// System.out.println("onUserListUnsubscribed subscriber:@"
 		// + subscriber.getScreenName()
 		// + " listOwner:@" + listOwner.getScreenName()
 		// + " list:" + list.getName());
 	}
-
+	
 	public void onUserListCreation(User listOwner, UserList list) {
 		// System.out.println("onUserListCreated  listOwner:@"
 		// + listOwner.getScreenName()
 		// + " list:" + list.getName());
 	}
-
+	
 	public void onUserListUpdate(User listOwner, UserList list) {
 		// System.out.println("onUserListUpdated  listOwner:@"
 		// + listOwner.getScreenName()
 		// + " list:" + list.getName());
 	}
-
+	
 	public void onUserListDeletion(User listOwner, UserList list) {
 		// System.out.println("onUserListDestroyed  listOwner:@"
 		// + listOwner.getScreenName()
 		// + " list:" + list.getName());
 	}
-
+	
 	public void onUserProfileUpdate(User updatedUser) {
 		// System.out.println("onUserProfileUpdated user:@" +
 		// updatedUser.getScreenName());
 	}
-
+	
 	public void onBlock(User source, User blockedUser) {
 		// System.out.println("onBlock source:@" + source.getScreenName()
 		// + " target:@" + blockedUser.getScreenName());
 	}
-
+	
 	public void onUnblock(User source, User unblockedUser) {
 		// System.out.println("onUnblock source:@" + source.getScreenName()
 		// + " target:@" + unblockedUser.getScreenName());
 	}
-
+	
 	public void onException(Exception ex) {
 		ex.printStackTrace();
 		System.out.println("onException:" + ex.getMessage());
 	}
-
+	
 	public void draw() {
-
+		
 		synchronized (clientList) {
-
+			
 			if (clientList.isEmpty()) {
 				return;
 			}
-
+			
 			int clIndex = 0;
 			for (Client cl : clientList){
 				byte[] bytes = null;
@@ -312,7 +314,7 @@ public class BreadboxWebworkerServer extends PApplet implements
 							if(tb == this.TWEETBREAK){
 								currentMessage = null;
 							}
-
+							
 						}
 					}else if(currentMessage == null){
 						if (currentMessage == null) {
@@ -337,7 +339,7 @@ public class BreadboxWebworkerServer extends PApplet implements
 						}
 						
 					}
-
+					
 				}
 				if(clIndex > 0 && cl.available() > 0){
 					bytes = cl.readBytes();
@@ -361,7 +363,7 @@ public class BreadboxWebworkerServer extends PApplet implements
 								this.lTS.broadcastToken(token);
 							}
 						}
-
+						
 					}
 					
 					if (client.equals(clientList.get(0))) {
@@ -371,19 +373,19 @@ public class BreadboxWebworkerServer extends PApplet implements
 			}
 		}
 	}
-
+	
 	public void setup() {
 		// frameRate(1);
 		
-
+		
 		init(new String[] {});
 		server = new Server(this, 5204);
 		startTwitter();
 	}
-
+	
 	public static void main(String args[]) {
 		PApplet.main(new String[] { "--bgcolor=#F0F0F0",
-				"breadbox.webworker.server.BreadboxWebworkerServer" });
+			"breadbox.webworker.server.BreadboxWebworkerServer" });
 	}
-
+	
 }
