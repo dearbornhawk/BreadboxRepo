@@ -415,7 +415,11 @@ public class Monsters extends PApplet implements WordListener {
 
 	public static void main (String[] args)
 	{
-		PApplet.main(new String[] { "--bgcolor=#F0F0F0", "breadbox.cellular.monsters.Monsters" });
+		String[] appletArgs = new String[args.length + 1];
+		for(int i=0;i<args.length;i++) appletArgs[i] = args[i];
+		appletArgs[args.length] = Monsters.class.getName();
+		PApplet.main(appletArgs);
+
 	}
 
 
