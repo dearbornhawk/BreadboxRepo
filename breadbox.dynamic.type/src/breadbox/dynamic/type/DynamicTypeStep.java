@@ -38,6 +38,7 @@ public class DynamicTypeStep extends PApplet implements WordListener {
 	boolean resetTweet = false;
 	Client client;
 	WordComms wordComms;
+	String serverAddress = System.getProperty("address", "localhost");
 	
 	
 	@Override
@@ -87,7 +88,7 @@ public class DynamicTypeStep extends PApplet implements WordListener {
 		  }
 		  
 		  
-		  client = new Client(this,"localhost",5204);
+		  client = new Client(this,serverAddress,5204);
 		  wordComms = new WordComms(this,client);
 		  client.write(handshake);
 		 

@@ -35,6 +35,7 @@ public class ColloidalText extends PApplet implements WordListener {
 	
 	Client client;
 	WordComms wordComms;
+	String serverAddress = System.getProperty("address", "localhost");
 	int letterFrameCount = 0;
 	char letter;
 	boolean started = false;
@@ -101,7 +102,7 @@ public class ColloidalText extends PApplet implements WordListener {
 	  
 	  h = new Hand(width/2f,1*height/2f,20,15,12.0f,22.0f,3,5,7,-11, width, height);
 	  lastMillis = millis();  
-		  client = new Client(this,"localhost",5204);
+		  client = new Client(this,serverAddress,5204);
 		  wordComms = new WordComms(this,client);
 		  client.write(handshake);
 
